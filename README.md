@@ -1,39 +1,25 @@
-Pastelería Con Amore 🍰✨
+# 🍰 Con Amore | E-commerce de Pastelería Artesanal
 
-E-commerce artesanal de alta gama desarrollado con una arquitectura moderna de componentes y un Headless CMS para la gestión autónoma de contenido.
+Proyecto web e-commerce de desarrollo full-stack orientado a la gestión dinámica de productos de pastelería, diseñado con una arquitectura moderna de tipo Jamstack y desacoplada.
 
-🚀 Sobre el Proyecto
+## 🚀 Stack Tecnológico
 
-Este proyecto nace como una solución e-commerce real orientada a optimizar la experiencia de venta y gestión de una pastelería artesanal. El objetivo principal es ofrecer una interfaz rápida, totalmente responsive, combinada con un panel de administración intuitivo para que el usuario final pueda actualizar catálogos, precios y variantes de manera independiente sin tocar código.
+*   **Frontend:** Astro (Framework optimizado para velocidad y rendimiento).
+*   **Estilos:** Tailwind CSS (Diseño responsivo, limpio y de estética minimalista).
+*   **CMS / Backend:** Sanity Headless CMS (Panel de administración personalizado para la gestión autónoma del catálogo).
+*   **Interactividad:** JavaScript Vanilla para la lógica reactiva del carrito y selector de variantes.
 
-🛠️ Stack Tecnológico & Arquitectura
+## 🛠️ Decisiones de Arquitectura y Arquitectura de Datos
 
-El proyecto implementa un enfoque de Jamstack, separando el frontend de alto rendimiento del backend como servicio:
+*   **Gestión de Contenido Desacoplada:** Se integró Sanity CMS para permitir que un usuario sin conocimientos técnicos pueda administrar precios, descripciones e imágenes en tiempo real sin tocar código fuente.
+*   **Sistema Dinámico de Variantes:** Implementación de un esquema de objetos anidados (`variantes`) en el CMS que permite asociar múltiples tamaños y precios a un mismo producto (ej. 18 cm vs 24 cm).
+*   **Identidades Únicas en Carrito:** Resolución de conflictos de estado mediante la composición de IDs compuestos (`id-tamaño`), permitiendo manejar variantes de un mismo producto de forma independiente en el carrito de compras.
 
-Frontend: Astro (para un rendimiento óptimo con zero-JS por defecto donde sea posible).
+## ✨ Características Principales
 
-Estilos y UI: Tailwind CSS (diseño atómico, sombras personalizadas, paleta de colores cálidos y componentes responsivos tipo píldora para selección de variantes).
+*   **UI/UX Refinada:** Tarjetas de productos minimalistas con botones interactivos estilo "píldora" para la selección de tamaños con actualización de precio en tiempo real.
+*   **Tipografía y Copywriting Sensorial:** Enfoque comercial orientado a la descripción de texturas y sabores.
+*   **Formato de Moneda Local:** Renderizado de precios adaptados al formato numérico regional (`es-AR`).
 
-Interactividad: Vanilla JavaScript (lógica de carrito de compras reactiva con persistencia local y manejo dinámico de variantes de tamaño y precio).
-
-Headless CMS: Sanity CMS (esquemas personalizados para productos, imágenes optimizadas con hotspot y gestión de arrays de objetos para variantes de precios).
-
-💡 Características Principales
-
-Catálogo Dinámico sincronizado con Sanity: Consulta en tiempo real de productos, descripciones sensoriales y recursos multimedia.
-
-Gestión de Variantes por Tamaño: Selector interactivo de tamaños (ej. 18cm vs 24cm) que recalcula dinámicamente el precio final en la interfaz y previene conflictos de ID en el carrito de compras.
-
-Formateo Localizado: Precios adaptados al formato monetario argentino (es-AR) para una experiencia de usuario natural y profesional.
-
-Panel Administrativo Independiente: Estructura modular preparada para que administradores sin perfil técnico gestionen el stock fácilmente.
-
-🔭 Próximos Pasos (Roadmap)
-
-[ ] Integración de pasarela de pagos (Mercado Pago).
-
-[ ] Optimización de imágenes mediante WebP y Sanity Image API.
-
-[ ] Implementación de filtros por categoría y buscador en tiempo real.
-
-Desarrollado con pasión y buenas prácticas por Imanol Cruz.
+---
+Desarrollado con enfoque en rendimiento, escalabilidad y experiencia de usuario.
