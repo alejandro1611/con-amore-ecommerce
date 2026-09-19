@@ -1,0 +1,46 @@
+---
+// NuestraHistoria.astro
+// Sección "Nuestra Historia": foto de la dueña + texto contando el origen del emprendimiento.
+// Reemplazá FOTO_SRC por la ruta real (poné el archivo en /public y usá "/nombre-archivo.jpg")
+// y el texto de abajo por la historia real.
+const FOTO_SRC = "/historia-dueña.jpg"; // TODO: reemplazar por la foto real
+---
+
+<section id="historia" class="bg-white [scroll-margin-top:150px]">
+  <div class="max-w-6xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+    <!-- Foto -->
+    <div class="rounded-lg overflow-hidden shadow-md">
+      <img
+        src="owner.jpg"
+        alt="Fundadora de Con Amore"
+        class="w-full h-[420px] object-cover"
+        onerror="this.src='https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=800&q=80'"
+      />
+    </div>
+
+    <!-- Texto -->
+    <div>
+      <p class="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-3">
+        Nuestra Historia
+      </p>
+      <h3 class="text-4xl font-serif font-bold text-gray-900 mb-6">
+        El sabor de un sueño hecho realidad
+      </h3>
+      <div class="space-y-4 text-gray-600 leading-relaxed">
+        <p>
+          <!-- TODO: reemplazar por la historia real -->
+          Con Amore nació de la pasión de Norma por la repostería
+          artesanal. Todo empezó horneando para familia y amigos, hasta que ese
+          cariño por cada receta se convirtió en un pequeño emprendimiento.
+        </p>
+        <p>
+          Hoy seguimos eligiendo los mejores ingredientes y dedicando tiempo a
+          cada detalle, para que cada bocado tenga ese sabor casero que nos
+          caracteriza desde el primer día.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>

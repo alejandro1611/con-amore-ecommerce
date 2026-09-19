@@ -1,0 +1,121 @@
+---
+import { sanityClient } from '../lib/sanity.js';
+
+// Pedimos los datos a Sanity, incluyendo el nuevo campo "variantes"
+const productos = await sanityClient.fetch(`
+  *[_type == "product"]{
+    "id": _id,
+    "nombre": name,
+    "descripcion": description,
+    "imagen": image.asset->url,
+    "variantes": variantes[]{
+      "tamano": tamano,
+      "precio": precio
+    }
+  }
+`);
+---
+
+<section id="productos" class="max-w-6xl mx-auto px-6 py-24">
+  <div class="text-center mb-16">
+    <span class="text-[#D4AF37] font-bold tracking-[0.2em] uppercase text-sm drop-shadow-sm">Nuestras Especialidades</span>
+    <h2 class="text-4xl md:text-5xl font-bold text-[#E21A77] font-serif mt-4 drop-shadow-md">Nuestros Productos</h2>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {productos.map((prod) => {
+      // Si por error tu tía no carga variantes, evitamos que la página se rompa
+      if (!prod.variantes || prod.variantes.length === 0) return null;
+      
+      return (
+        <div class="bg-white rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+          
+          <div class="relative w-full aspect-square overflow-hidden bg-gray-50">
+            <img src={prod.imagen} alt={prod.nombre} class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+          </div>
+          
+          <div class="p-6 flex flex-col flex-grow">
+            <h4 class="text-2xl font-bold text-gray-900 mb-2 font-serif">{prod.nombre}</h4>
+            <p class="text-gray-500 text-sm mb-6 flex-grow leading-relaxed italic">
+              {prod.descripcion}
+            </p>
+            
+            <!-- Selector Dinámico de Tamaños -->
+            <div class="mb-6">
+              <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Elige el tamaño:</p>
+              <div class="flex flex-wrap gap-2">
+                {prod.variantes.map((variante, index) => (
+                  <button 
+                    class={`btn-tamaño flex-1 min-w-[100px] py-2 text-xs font-bold rounded border transition-colors ${
+                      index === 0 
+                        ? 'bg-[#E21A77] text-white border-[#E21A77]' // El primero arranca pintado
+                        : 'bg-white text-gray-600 border-gray-200 hover:border-[#E21A77]'
+                    }`}
+                    data-producto={prod.id}
+                    data-precio={variante.precio}
+                    data-tamaño={variante.tamano}
+                  >
+                    {variante.tamano}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <!-- Precio y Botón Agregar (Arranca con los datos de la primera variante) -->
+            <div class="flex justify-between items-end mt-auto pt-4 border-t border-gray-100">
+              <div>
+                <p class="text-xs text-gray-400 mb-1">Precio final</p>
+                <span id={`precio-${prod.id}`} class="text-3xl font-bold text-[#E21A77] font-serif">
+                    ${prod.variantes[0].precio.toLocaleString('es-AR')}
+                </span>
+              </div>
+              <button 
+                id={`btn-add-${prod.id}`}
+                class="btn-agregar bg-[#D4AF37] text-white px-6 py-3 rounded shadow-md font-bold hover:bg-[#B8972E] hover:shadow-lg transition-all active:scale-95" 
+                data-id={`${prod.id}-${prod.variantes[0].tamano}`} 
+                data-nombre={`${prod.nombre} (${prod.variantes[0].tamano})`} 
+                data-precio={prod.variantes[0].precio}
+              >
+                Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.btn-tamaño').forEach(boton => {
+    boton.addEventListener('click', (e) => {
+      const btn = e.target;
+      const productoId = btn.getAttribute('data-producto');
+      const nuevoPrecio = btn.getAttribute('data-precio');
+      const nuevoTamaño = btn.getAttribute('data-tamaño');
+      
+      // Actualizamos el precio en pantalla
+      const precioFormateado = Number(nuevoPrecio).toLocaleString('es-AR');
+      document.getElementById(`precio-${productoId}`).innerText = `$${precioFormateado}`;
+      
+      // Capturamos el botón Agregar
+      const btnAgregar = document.getElementById(`btn-add-${productoId}`);
+      const nombreBase = btnAgregar.getAttribute('data-nombre').split(' (')[0];
+      
+      // LA MAGIA: Actualizamos el ID, el precio y el nombre dinámicamente
+      btnAgregar.setAttribute('data-id', `${productoId}-${nuevoTamaño}`);
+      btnAgregar.setAttribute('data-precio', nuevoPrecio);
+      btnAgregar.setAttribute('data-nombre', `${nombreBase} (${nuevoTamaño})`);
+      
+      // Cambiamos los colores de los botones de tamaño
+      const botonesHermano = btn.parentElement.querySelectorAll('.btn-tamaño');
+      botonesHermano.forEach(b => {
+        b.classList.remove('bg-[#E21A77]', 'text-white', 'border-[#E21A77]');
+        b.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+      });
+      
+      btn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+      btn.classList.add('bg-[#E21A77]', 'text-white', 'border-[#E21A77]');
+    });
+  });
+</script>

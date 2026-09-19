@@ -1,0 +1,46 @@
+---
+// Consultas.astro
+// Sección para pedidos personalizados / consultas que no están en el catálogo.
+const numeroWhatsApp = "+5493886061238"; 
+const numeroTelefono = "+5493886061238"; 
+const mensaje = encodeURIComponent("Hola, me gustaría hacer una consulta");
+---
+
+<section id="consultas" class="bg-white [scroll-margin-top:170px]">
+  <div class="max-w-3xl mx-auto px-6 py-24 text-center">
+  <p class="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-3">
+    Consultas
+  </p>
+  <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6">
+    Hacé tu consulta fácilmente
+  </h3>
+  <p class="text-gray-600 max-w-xl mx-auto mb-10 leading-relaxed">
+    ¿No encontrás lo que buscás en el catálogo? Podés realizar tu consulta por WhatsApp o llamarnos por teléfono. Te atendemos con
+    gusto y te asesoramos para que tu elección sea perfecta.
+  </p>
+
+  <div class="flex flex-wrap justify-center gap-4 mb-8">
+    <a
+      href={`https://wa.me/${numeroWhatsApp}?text=${mensaje}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#1DA851] transition"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.52 3.48A11.9 11.9 0 0 0 12.04 0C5.5 0 .16 5.34.16 11.88c0 2.1.55 4.14 1.6 5.94L0 24l6.33-1.66a11.86 11.86 0 0 0 5.7 1.45h.01c6.54 0 11.88-5.34 11.88-11.88 0-3.17-1.24-6.15-3.4-8.43zM12.04 21.6c-1.78 0-3.52-.48-5.04-1.38l-.36-.21-3.76.99 1-3.67-.24-.38a9.7 9.7 0 0 1-1.48-5.07c0-5.36 4.36-9.72 9.9-9.72 2.64 0 5.12 1.03 6.98 2.9a9.78 9.78 0 0 1 2.9 6.96c0 5.36-4.37 9.72-9.9 9.72zm5.44-7.28c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.24-.46-2.37-1.47-.87-.78-1.46-1.74-1.63-2.04-.17-.3-.02-.46.13-.6.13-.13.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.48s1.06 2.88 1.21 3.08c.15.2 2.09 3.2 5.08 4.48.71.31 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z"/>
+      </svg>
+      WhatsApp
+    </a>
+
+    <a
+      href={`tel:${numeroTelefono}`}
+      class="flex items-center gap-2 border-2 border-[#E21A77] text-[#E21A77] px-6 py-3 rounded-full font-semibold hover:bg-[#E21A77] hover:text-white transition"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      Llamar
+    </a>
+  </div>
+  </div>
+</section>
