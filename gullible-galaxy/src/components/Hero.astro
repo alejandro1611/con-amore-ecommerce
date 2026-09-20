@@ -1,24 +1,59 @@
 ---
+// Hero.astro
 ---
+
 <div class="relative min-h-screen flex flex-col bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1486427944299-d1955d23e34d?q=80&w=2070&auto=format&fit=crop');">
   <div class="absolute inset-0 bg-[#E21A77]/40 mix-blend-multiply"></div>
   <div class="absolute inset-0 bg-black/50"></div>
 
   <main class="relative z-10 flex-grow flex flex-col items-center justify-center text-center px-4 pt-20">
-    <p class="text-sm md:text-base tracking-[0.4em] uppercase mb-6 text-gray-200 font-semibold drop-shadow-md">
+    <!-- Elemento 1: Texto superior (aparece primero) -->
+    <p class="text-sm md:text-base tracking-[0.4em] uppercase mb-6 text-gray-200 font-semibold drop-shadow-md animate-hero-item delay-1">
       Pastelería & Confitería Artesanal
     </p>
 
-    <h1 class="text-7xl md:text-9xl font-bold mb-6 font-serif drop-shadow-xl text-white" style="font-family: 'Playfair Display', serif;">
+    <!-- Elemento 2: Título principal (aparece segundo) -->
+    <h1 class="text-7xl md:text-9xl font-bold mb-6 font-serif drop-shadow-xl text-white animate-hero-item delay-2" style="font-family: 'Playfair Display', serif;">
       Con Amore
     </h1>
 
-    <p class="text-xl md:text-2xl italic font-serif text-gray-200 mb-12 max-w-2xl font-light drop-shadow-md">
+    <!-- Elemento 3: Subtítulo (aparece tercero) -->
+    <p class="text-xl md:text-2xl italic font-serif text-gray-200 mb-12 max-w-2xl font-light drop-shadow-md animate-hero-item delay-3">
       El sabor del amor en cada bocado
     </p>
 
-    <a href="#productos" class="flex items-center justify-center gap-2 bg-transparent border border-white text-white px-8 py-3.5 rounded-sm font-semibold hover:bg-white hover:text-[#E21A77] transition shadow-lg tracking-wide">
-      Ver productos disponiles
+    <!-- Elemento 4: Botón (aparece último) -->
+    <a href="#productos" class="flex items-center justify-center gap-2 bg-transparent border border-white text-white px-8 py-3.5 rounded-sm font-semibold hover:bg-white hover:text-[#E21A77] transition shadow-lg tracking-wide animate-hero-item delay-4">
+      Ver productos disponibles
     </a>
   </main>
 </div>
+
+<style>
+  /* Definición de la animación: aparece suavemente subiendo 20px */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Clase base para los elementos que se van a animar */
+  .animate-hero-item {
+    opacity: 0; /* Empiezan invisibles */
+    animation-name: fadeInUp;
+    animation-duration: 0.8s; /* Duración de la animación */
+    animation-timing-function: ease-out; /* Suavizado al final */
+    animation-fill-mode: forwards; /* Mantiene el estado final (opacidad 1) */
+  }
+
+  /* Clases de retraso (Delays) para el efecto en cascada */
+  .delay-1 { animation-delay: 0.2s; } /* Texto superior */
+  .delay-2 { animation-delay: 0.4s; } /* Título "Con Amore" */
+  .delay-3 { animation-delay: 0.6s; } /* Subtítulo */
+  .delay-4 { animation-delay: 0.8s; } /* Botón */
+</style>
