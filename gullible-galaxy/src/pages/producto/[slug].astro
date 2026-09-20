@@ -1,0 +1,193 @@
+---
+// Importamos la conexión a Sanity
+import { sanityClient } from '../../lib/sanity.js';
+
+// Importamos los estilos globales y los componentes clave para que la página no pierda el formato
+import '../../styles/global.css';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Carrito from '../../components/Carrito.astro';
+
+// 1. getStaticPaths le dice a Astro qué páginas debe crear
+export async function getStaticPaths() {
+  const query = `*[_type == "product"]{
+    "id": _id,
+    name,
+    "slug": slug.current,
+    description,
+    isAvailable,
+    "imagen": image.asset->url,
+    "variantes": variantes[]{
+      tamano,
+      precio
+    }
+  }`;
+  
+  const productos = await sanityClient.fetch(query);
+
+  return productos.map((producto) => {
+    return {
+      params: { slug: producto.slug },
+      props: { producto },
+    };
+  });
+}
+
+const { producto } = Astro.props;
+
+// Variables de estado inicial
+const disponible = producto.isAvailable !== false;
+const tieneVariantes = producto.variantes && producto.variantes.length > 0;
+const precioBase = tieneVariantes ? producto.variantes[0].precio : 0;
+const tamanoBase = tieneVariantes ? producto.variantes[0].tamano : '';
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{producto.name} | Con Amore</title>
+    <!-- Mismos metas y tipografías que en tu index.astro -->
+    <link rel="icon" type="image/x-icon" href="/con-amore-logo.ico?v=123" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  </head>
+  
+  <body class="font-sans bg-[#FFF5F8] text-gray-800 relative">
+    
+    <!-- Renderizamos el Header oficial de tu página -->
+    <Header />
+
+    <main class="max-w-6xl mx-auto px-6 py-12 md:py-20 mt-16 md:mt-20">
+      
+      <!-- Navegación "Migas de pan" -->
+      <div class="mb-10 text-xs tracking-widest uppercase text-gray-400">
+        <a href="/" class="hover:text-[#F19EB8] transition-colors">Inicio</a> &nbsp;/&nbsp; 
+        <a href="/#productos" class="hover:text-[#F19EB8] transition-colors">Productos</a> &nbsp;/&nbsp; 
+        <span class="text-gray-800">{producto.name}</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-start">
+        
+        <!-- Columna Izquierda: Foto Grande -->
+        <div class="relative bg-white aspect-square overflow-hidden rounded-sm shadow-sm">
+          {producto.imagen && (
+            <img 
+              src={producto.imagen} 
+              alt={producto.name} 
+              class={`w-full h-full object-cover ${!disponible ? 'opacity-70' : ''}`}
+            />
+          )}
+          {!disponible && (
+            <div class="absolute inset-0 bg-white/30 flex items-center justify-center backdrop-blur-[2px]">
+              <span class="bg-gray-900 text-white font-bold tracking-[0.2em] uppercase px-8 py-3 text-sm">
+                Agotado
+              </span>
+            </div>
+          )}
+        </div>
+
+        <!-- Columna Derecha: Detalles (Estilo Boutique) -->
+        <div class="flex flex-col pt-4">
+          <h1 class="text-3xl md:text-4xl font-serif font-bold text-[#E21A77] uppercase tracking-wider mb-4 drop-shadow-sm">
+            {producto.name}
+          </h1>
+          
+          <p id="precio-display" class="text-3xl font-light text-gray-700 mb-8">
+            ${precioBase.toLocaleString('es-AR')}
+          </p>
+
+          <!-- Selector de Tamaños -->
+          {tieneVariantes && disponible && (
+            <div class="mb-8 border-t border-b border-[#E21A77]/20 py-6">
+              <p class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-4">Tamaño</p>
+              <div class="flex flex-wrap gap-3">
+                {producto.variantes.map((variante, index) => (
+                  <button 
+                    class={`btn-tamaño py-2 px-6 text-xs font-bold uppercase tracking-wider border transition-colors ${
+                      index === 0 
+                        ? 'bg-[#E21A77] text-white border-[#E21A77]' // Seleccionado inicial
+                        : 'bg-white text-gray-600 border-gray-300 hover:border-[#E21A77]' 
+                    }`}
+                    data-precio={variante.precio}
+                    data-tamano={variante.tamano}
+                  >
+                    {variante.tamano}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Botón Agregar al Carrito -->
+          <button 
+            id="btn-add-detail"
+            class={`w-full py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300 mb-8 ${
+              disponible 
+                ? 'bg-[#F19EB8] text-white hover:bg-[#E285A2] shadow-sm' 
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            } btn-agregar`}
+            data-id={`${producto.id}-${tamanoBase}`}
+            data-nombre={`${producto.name} (${tamanoBase})`}
+            data-precio={precioBase}
+            disabled={!disponible}
+          >
+            {disponible ? 'Agregar al carrito' : 'Sin Stock'}
+          </button>
+
+          <!-- Aviso Importante -->
+          <div class="bg-white p-6 border border-[#E21A77]/20 rounded-md text-sm text-gray-600 leading-relaxed mb-8 flex gap-4 items-start shadow-sm">
+            <svg class="w-6 h-6 text-[#E21A77] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div>
+              <p class="font-bold text-gray-900 uppercase text-xs tracking-wider mb-1">Importante</p>
+              <p>Los pedidos se toman con un mínimo de 24 hs a 48 hs de anticipación. Las entregas son a coordinar o podés elegir retiro por el local.</p>
+            </div>
+          </div>
+
+          <!-- Descripción Larga -->
+          <div>
+            <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-4 border-b border-[#E21A77]/20 pb-2">Descripción del producto</h3>
+            <p class="text-gray-600 text-sm leading-relaxed whitespace-pre-line italic">
+              {producto.description}
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- Renderizamos el Footer y el Carrito -->
+    <Footer />
+    <Carrito />
+
+    <!-- Script para actualizar el precio y preparar el botón de agregar -->
+    <script define:vars={{ productoId: producto.id, nombreBase: producto.name }}>
+      const botonesTamano = document.querySelectorAll('.btn-tamaño');
+      const precioDisplay = document.getElementById('precio-display');
+      const btnAgregar = document.getElementById('btn-add-detail');
+
+      botonesTamano.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const nuevoPrecio = e.target.getAttribute('data-precio');
+          const nuevoTamano = e.target.getAttribute('data-tamano');
+
+          // 1. Actualizamos el precio grande
+          precioDisplay.innerText = '$' + Number(nuevoPrecio).toLocaleString('es-AR');
+
+          // 2. Le pasamos la info al botón para que el carrito capture lo correcto
+          btnAgregar.setAttribute('data-id', `${productoId}-${nuevoTamano}`);
+          btnAgregar.setAttribute('data-precio', nuevoPrecio);
+          btnAgregar.setAttribute('data-nombre', `${nombreBase} (${nuevoTamano})`);
+
+          // 3. Cambiamos el color de los botones
+          botonesTamano.forEach(b => {
+            b.classList.remove('bg-[#E21A77]', 'text-white', 'border-[#E21A77]');
+            b.classList.add('bg-white', 'text-gray-600', 'border-gray-300');
+          });
+          e.target.classList.remove('bg-white', 'text-gray-600', 'border-gray-300');
+          e.target.classList.add('bg-[#E21A77]', 'text-white', 'border-[#E21A77]');
+        });
+      });
+    </script>
+
+  </body>
+</html>
