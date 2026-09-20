@@ -21,11 +21,37 @@ const numeroWhatsApp = "+5493886061238";
     <p class="text-gray-500 text-center mt-10">El carrito está vacío</p>
   </div>
 
-  <div class="p-6 border-t bg-gray-50">
-    <div class="flex justify-between text-xl font-bold mb-4 text-gray-800">
+  <div class="p-6 border-t bg-gray-50 flex flex-col gap-3">
+    <!-- Formulario de validación rápida -->
+    <div class="flex flex-col gap-3 mb-4 mt-2">
+      <div class="relative">
+        <input type="text" id="input-nombre" placeholder="Tu nombre..." class="w-full bg-white border border-gray-200 text-gray-800 text-sm rounded-xl px-4 py-3 outline-none transition-all duration-200 focus:border-[#E21A77] focus:ring-4 focus:ring-[#E21A77]/10 shadow-sm placeholder-gray-400" required />
+      </div>
+      
+      <div class="relative">
+        <select id="select-envio" class="w-full bg-white border border-gray-200 text-gray-800 text-sm rounded-xl px-4 py-3 outline-none transition-all duration-200 focus:border-[#E21A77] focus:ring-4 focus:ring-[#E21A77]/10 shadow-sm appearance-none cursor-pointer" required>
+          <option value="" disabled selected>Seleccioná método de entrega...</option>
+          <option value="Retiro en local">Retiro en local</option>
+          <option value="Envío a domicilio">Envío a domicilio</option>
+        </select>
+        <!-- Ícono de flechita personalizado -->
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+
+      <div class="relative">
+        <textarea id="input-notas" placeholder="Notas (ej: sin azúcar, alérgico a nueces)..." class="w-full bg-white border border-gray-200 text-gray-800 text-sm rounded-xl px-4 py-3 outline-none transition-all duration-200 focus:border-[#E21A77] focus:ring-4 focus:ring-[#E21A77]/10 shadow-sm placeholder-gray-400 resize-none h-20" spellcheck="false"></textarea>
+      </div>
+    </div>
+
+    <div class="flex justify-between text-xl font-bold mb-2 text-gray-800">
       <span>Total:</span>
       <span id="total-carrito">$0</span>
     </div>
+    
     <button id="btn-whatsapp" class="w-full bg-[#25D366] text-white py-4 rounded-lg font-bold text-lg hover:bg-[#1DA851] transition flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
         <path d="M20.52 3.48A11.9 11.9 0 0 0 12.04 0C5.5 0 .16 5.34.16 11.88c0 2.1.55 4.14 1.6 5.94L0 24l6.33-1.66a11.86 11.86 0 0 0 5.7 1.45h.01c6.54 0 11.88-5.34 11.88-11.88 0-3.17-1.24-6.15-3.4-8.43zM12.04 21.6c-1.78 0-3.52-.48-5.04-1.38l-.36-.21-3.76.99 1-3.67-.24-.38a9.7 9.7 0 0 1-1.48-5.07c0-5.36 4.36-9.72 9.9-9.72 2.64 0 5.12 1.03 6.98 2.9a9.78 9.78 0 0 1 2.9 6.96c0 5.36-4.37 9.72-9.9 9.72zm5.44-7.28c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.24-.46-2.37-1.47-.87-.78-1.46-1.74-1.63-2.04-.17-.3-.02-.46.13-.6.13-.13.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.48s1.06 2.88 1.21 3.08c.15.2 2.09 3.2 5.08 4.48.71.31 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z"/>
@@ -55,7 +81,49 @@ const numeroWhatsApp = "+5493886061238";
   </div>
 </div>
 
+<!-- Modal de Validación Personalizado -->
+<div id="modal-validacion" class="fixed inset-0 z-[70] hidden items-center justify-center p-6 opacity-0 transition-opacity duration-300">
+  <div id="modal-validacion-backdrop" class="absolute inset-0 bg-black/50 cursor-pointer"></div>
+  <div class="relative bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 transition-transform duration-300">
+    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+      <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      </svg>
+    </div>
+    <h4 class="text-lg font-bold text-gray-900 mb-2">Faltan datos</h4>
+    <p id="texto-modal-validacion" class="text-sm text-gray-600 mb-6">Por favor, ingresá tu nombre y seleccioná el método de entrega antes de enviar el pedido.</p>
+    <button id="btn-cerrar-validacion" class="w-full bg-[#E21A77] text-white rounded-lg py-3 font-bold hover:bg-[#C71568] transition">
+      Entendido
+    </button>
+  </div>
+</div>
+
 <script>
+   const modalValidacion = document.getElementById('modal-validacion');
+  const btnCerrarValidacion = document.getElementById('btn-cerrar-validacion');
+  const backdropValidacion = document.getElementById('modal-validacion-backdrop');
+
+  function abrirModalValidacion() {
+    modalValidacion?.classList.remove('hidden');
+    modalValidacion?.classList.add('flex');
+    setTimeout(() => {
+      modalValidacion?.classList.remove('opacity-0');
+      modalValidacion?.querySelector('.relative')?.classList.remove('scale-95');
+    }, 10);
+  }
+
+  function cerrarModalValidacion() {
+    modalValidacion?.classList.add('opacity-0');
+    modalValidacion?.querySelector('.relative')?.classList.add('scale-95');
+    setTimeout(() => {
+      modalValidacion?.classList.add('hidden');
+      modalValidacion?.classList.remove('flex');
+    }, 300); // Espera a que termine la animación
+  }
+
+  // Eventos para cerrar el modal clickeando el botón o el fondo oscuro
+  btnCerrarValidacion?.addEventListener('click', cerrarModalValidacion);
+  backdropValidacion?.addEventListener('click', cerrarModalValidacion);
   type Producto = { id: string; nombre: string; precio: number; cantidad: number };
   const CLAVE_STORAGE = 'con-amore-carrito';
 
@@ -226,25 +294,74 @@ const numeroWhatsApp = "+5493886061238";
     if (btnWhatsapp) btnWhatsapp.disabled = false;
   }
 
+  // Forzar primera letra en mayúscula en tiempo real
+  const inputNombreGral = document.getElementById('input-nombre') as HTMLInputElement | null;
+  inputNombreGral?.addEventListener('input', (e) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value.length > 0) {
+      // Toma la primera letra, la hace mayúscula y le pega el resto del texto
+      target.value = target.value.charAt(0).toUpperCase() + target.value.slice(1);
+    }
+  });
+
   // Arma el mensaje del pedido y lo manda a WhatsApp
   btnWhatsapp?.addEventListener('click', () => {
     if (carrito.length === 0) return;
 
-    let mensaje = "¡Hola! Quiero hacer el siguiente pedido:%0A%0A";
+    // 1. Obtener valores del formulario
+    const inputNombre = document.getElementById('input-nombre') as HTMLInputElement | null;
+    const selectEnvio = document.getElementById('select-envio') as HTMLSelectElement | null;
+    const inputNotas = document.getElementById('input-notas') as HTMLTextAreaElement | null;
+
+    const nombre = inputNombre?.value.trim() || '';
+    const envio = selectEnvio?.value || '';
+    const notas = inputNotas?.value.trim() || '';
+
+    // 2. Validación obligatoria
+    const textoModal = document.getElementById('texto-modal-validacion');
+
+    // 2. Validación obligatoria (vacíos)
+    if (!nombre || !envio) {
+      if (textoModal) textoModal.innerText = "Por favor, ingresá tu nombre y seleccioná el método de entrega antes de enviar el pedido.";
+      abrirModalValidacion();
+      return;
+    }
+
+    // 2.1 Validación de longitud del nombre (mínimo 3 caracteres)
+    if (nombre.length < 3) {
+      if (textoModal) textoModal.innerText = "El nombre es muy corto. Por favor, escribí al menos 3 letras para identificar tu pedido.";
+      abrirModalValidacion();
+      return;
+    }
+
+    // 3. Armar lista de productos y calcular total
     let total = 0;
+    let listaProductos = "";
 
     carrito.forEach(item => {
       const subtotal = item.precio * item.cantidad;
       total += subtotal;
-      mensaje += `• ${item.nombre} x${item.cantidad} - $${subtotal}%0A`;
+      // Codificamos solo el nombre del producto por si tiene tildes o símbolos
+      listaProductos += `• ${item.cantidad}x ${encodeURIComponent(item.nombre)} ($${item.precio} c/u)%0A`;
     });
 
-    mensaje += `%0A*Total: $${total}*`;
+    // 4. Construir el mensaje usando %0A directo para garantizar los saltos de línea
+    let mensajeFinal = `*¡Hola! Quiero realizar un pedido:*%0A`;
+    mensajeFinal += `------------------------------------%0A`;
+    mensajeFinal += listaProductos;
+    mensajeFinal += `------------------------------------%0A`;
+    mensajeFinal += `*Total:* $${total}%0A`;
+    mensajeFinal += `*Nombre:* ${encodeURIComponent(nombre)}%0A`;
+    mensajeFinal += `*Método:* ${encodeURIComponent(envio)}`;
+    
+    if (notas) {
+      mensajeFinal += `%0A*Notas:* ${encodeURIComponent(notas)}`;
+    }
 
-    // wa.me acepta el número con o sin "+", pero le sacamos cualquier
-    // caracter que no sea dígito para evitar sorpresas.
+    // 5. Enviar a WhatsApp
     const numeroLimpio = numeroWhatsApp.replace(/\D/g, '');
-    const url = `https://wa.me/${numeroLimpio}?text=${mensaje}`;
+    const url = `https://wa.me/${numeroLimpio}?text=${mensajeFinal}`;
+    
     window.open(url, '_blank');
   });
 
