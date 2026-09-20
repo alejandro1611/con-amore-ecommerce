@@ -56,6 +56,13 @@ export const product = defineType({
       validation: (Rule) => Rule.required().error('¡La foto es indispensable para vender!'),
     }),
     defineField({
+      name: 'isAvailable',
+      title: '¿Está disponible?',
+      description: 'Apagá este interruptor si te quedaste sin ingredientes o no podés hacer más esta torta por hoy.',
+      type: 'boolean',
+      initialValue: true, // Cuando crea un producto nuevo, arranca disponible
+    }),
+    defineField({
       name: 'description',
       title: 'Descripción (Ingredientes)',
       type: 'text',
