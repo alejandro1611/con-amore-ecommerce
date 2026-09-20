@@ -57,8 +57,21 @@ const numeroWhatsApp = "+5493886061238";
 
 <script>
   type Producto = { id: string; nombre: string; precio: number; cantidad: number };
-  let carrito: Producto[] = [];
-  const numeroWhatsApp = "+5493886061238"; // TODO: reemplazar por el número real
+  const CLAVE_STORAGE = 'con-amore-carrito';
+
+  function cargarCarritoGuardado(): Producto[] {
+    try {
+      const guardado = localStorage.getItem(CLAVE_STORAGE);
+      return guardado ? JSON.parse(guardado) : [];
+    } catch {
+      // Si el dato guardado está corrupto o localStorage no está disponible
+      // (ej. modo incógnito con restricciones), arrancamos con carrito vacío.
+      return [];
+    }
+  }
+
+  let carrito: Producto[] = cargarCarritoGuardado();
+  const numeroWhatsApp = "+5493886061238"; // mismo número que en Consultas.astro
 
   const panelCarrito = document.getElementById('panel-carrito');
   const overlay = document.getElementById('overlay');
@@ -144,6 +157,15 @@ const numeroWhatsApp = "+5493886061238";
   });
 
   function actualizarCarrito() {
+    // Guardamos siempre, incluso con el carrito vacío (si no, "Vaciar" o
+    // sacar el último producto no se reflejaría después de refrescar).
+    try {
+      localStorage.setItem(CLAVE_STORAGE, JSON.stringify(carrito));
+    } catch {
+      // Si localStorage no está disponible, seguimos igual: el carrito
+      // funciona en memoria, solo no persiste entre refrescos.
+    }
+
     if (contadorCarritoNav) {
       contadorCarritoNav.innerText = String(carrito.reduce((acc, item) => acc + item.cantidad, 0));
     }
@@ -219,10 +241,13 @@ const numeroWhatsApp = "+5493886061238";
 
     mensaje += `%0A*Total: $${total}*`;
 
-    const url = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
+    // wa.me acepta el número con o sin "+", pero le sacamos cualquier
+    // caracter que no sea dígito para evitar sorpresas.
+    const numeroLimpio = numeroWhatsApp.replace(/\D/g, '');
+    const url = `https://wa.me/${numeroLimpio}?text=${mensaje}`;
     window.open(url, '_blank');
   });
 
-  // Estado inicial (botón de WhatsApp deshabilitado con el carrito vacío)
+  // Estado inicial: si había algo guardado en localStorage, se renderiza acá.
   actualizarCarrito();
 </script>
